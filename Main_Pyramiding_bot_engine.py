@@ -18,6 +18,18 @@ bin = ccxt.binance({
     "secret" :                      cfg.my_binance_config["secret"],
     })
 
+class binFu(ccxt.binance): #Binance Futures subclass
+    def __init__(self):
+        super().__init__()
+        self.urls['api'] = 'https://fapi.binance.com/fapi'
+
+    def fetch_ticker(self, symbol):
+        ticker = self.fetch_ticker_from_exchange(symbol)
+        return self.parse_ticker(ticker, symbol)
+
+    def fetch_ticker_from_exchange(self, symbol):
+        ticker = self.fetch(self.urls['api'] + '/v1/ticker/24hr', {'symbol': symbol})
+        return ticker
 
 # Binance nemá rádo desync s word time
 """
