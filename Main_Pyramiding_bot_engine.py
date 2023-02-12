@@ -8,7 +8,7 @@ import Gmail_agg as gma
 import config as cfg
 import sys, traceback
 import test2 as tst2
-
+import pandas as pd
 
 
 
@@ -179,11 +179,27 @@ def nakupni_cena (input_cena, co_vratit):
 
 testing_coef = 0.5
 
+
+side = []
+quant = []
+ini_price = []
+usd_nominal = []
+position_matrix ={"Side": side,
+                  "Quantity": quant,
+                  "Buy/Sell price": ini_price,
+                  "USD nominal": usd_nominal}
+df = pd.DataFrame(position_matrix)
+
+
+
+
+
 #------------ OPen SHORT ------------------------------------------------
 
-"""def new_open_short(market,contract_size):
+
+"""def new_open_short(market,contract_size,df):
     loop = 0
-    short_position_list = []
+
     while True:
         loop += 1
         print("loop counter : " + str(loop))
@@ -191,13 +207,16 @@ testing_coef = 0.5
             get_open_position = bin.fetch_positions()
             mam_short_pozici = float(get_open_position[0]["info"]["netSize"])  
             myShortbid = float(contract_size*testing_coef)
-            if # aktuální nakupní/prodejní cena open orderu < nejmenší možný příhoz  
-                # zahoď obj.
-                # get recently opened order a appendi jeho hodnotu a value do np.listu
+            if nakupni_cena_oo(bin.fetch_open_orders(),"price") < sym_ask_min(min_inc,market) # aktuální nakupní/prodejní cena open orderu < nejmenší možný příhoz  
+                bin.cancel_all_orders(market)# zahoď obj.
+                new_order = bin.create_order(market,"limit","sell", amount = myShortbid, price = (sym_ask_min(min_inc,market)), params={'postOnly': True})# get recently opened order a appendi jeho hodnotu a value do np.listu
                 # neotvírej další pozici v případě, že máš v listu více než 3 hodnoty
-            elif # mam short pozici < 0 a tato je menší než nejmenší možná příhoz
-                #
-        except:"""
+                df = df.append(pd.DataFrame([new_order],columns=df.columns),ignore_index=True)
+            elif # mam short pozici < 0 a tata je menší než nejmenší možná příhoz
+                
+        except:
+            print("")
+    return df"""
 
 
 def open_short(market,contract_size,short_counter):
